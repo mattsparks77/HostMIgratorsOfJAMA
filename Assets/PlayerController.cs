@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    //TODO make this private
-    public GameObject selectedObject;
+    [SerializeField] private GameObject selectedObject;
 
     [SerializeField] private GameObject areaHighlightPrefab;
     private GameObject areaHighlight;
@@ -32,6 +31,11 @@ public class PlayerController : MonoBehaviour {
         moveHighlightToObject();
 
 	}
+
+    public void SetNewSelectedObjectRef(GameObject newReferencedObject) {
+        selectedObject = newReferencedObject;
+        updateHighlightScaleAndOffset();
+    }
 
     public void RotateObject(int direction) {
         if (Mathf.Abs(direction) < Mathf.Epsilon)
