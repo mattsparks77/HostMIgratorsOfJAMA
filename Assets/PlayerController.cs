@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour {
     public void RotateObject(int direction) {
         if (Mathf.Abs(direction) < Mathf.Epsilon)
             return;
+        setColliders(false); //Disable colliders to check for collision in script
         updateCurrentRotation(direction);
         //Assign a new z-rotation quaternion
         Quaternion newRotation = Quaternion.Euler(0, 0, rotationAngles[currentRotation]);
@@ -43,10 +44,12 @@ public class PlayerController : MonoBehaviour {
         //selectedObject.GetComponent<Rigidbody>().MoveRotation(newRotation); //transform.rotation = newRotation;
         selectedObject.transform.rotation = newRotation;
         if (objectHasOverlaps()) {
+            print("Has overlaps");
             selectedObject.transform.rotation = oldRotation;
             updateCurrentRotation(-direction);
         }
         updateHighlightScaleAndOffset();
+        setColliders(true); //Reset colliders at the end
     }
     
     private void updateCurrentRotation(int direction) {
@@ -119,5 +122,12 @@ public class PlayerController : MonoBehaviour {
         print(highestIndexY);
         float highDifference = highestYPos - selectedObject.transform.position.y;
         highlightOffset.y = highDifference - highestIndexY * selectedObject.transform.localScale.y;
+    }
+
+    private void setColliders(bool active) {
+        foreach (Transform child in selectedObject.transform) {
+            BoxCollider childCol = child.GetComponent<BoxCollider>();
+            childCol.enabled = active;
+        }
     }
 }
