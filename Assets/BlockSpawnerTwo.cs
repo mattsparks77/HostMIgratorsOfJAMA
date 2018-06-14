@@ -122,7 +122,7 @@ public class BlockSpawnerTwo : NetworkBehaviour {
         if (spawnCooldown > 0f || indicator == null || IsIndicatorOverlapping())
             return;
         spawnCooldown = cooldownTime;
-        CmdSpawnBlock(blockPrefabs[blockIndex],
+        CmdSpawnBlock(blockIndex,
                       indicator.transform.position,
                       indicator.transform.rotation);
         NextBlock();
@@ -130,8 +130,8 @@ public class BlockSpawnerTwo : NetworkBehaviour {
 
     //spawns the block on the server
     [Command]
-    void CmdSpawnBlock(GameObject blockPrefab, Vector3 position, Quaternion rotation) {
-        GameObject newBlock = Instantiate(blockPrefab, position, rotation);
+    void CmdSpawnBlock(int blockIndex, Vector3 position, Quaternion rotation) {
+        GameObject newBlock = Instantiate(blockPrefabs[blockIndex], position, rotation);
         NetworkServer.Spawn(newBlock);
     }
 
@@ -140,13 +140,12 @@ public class BlockSpawnerTwo : NetworkBehaviour {
     bool IsIndicatorOverlapping() {
         if (indicator == null)
             return false;
-        int mask = 1 << LayerMask.NameToLayer("Placed Block");
+        int mask = LayerMask.NameToLayer("Placed Block");
         Vector3 overlapTolerance = Vector3.kEpsilon * Vector3.one;
         foreach (Transform child in indicator.transform.GetComponentsInChildren<Transform>()) {
             Collider[] overlaps = Physics.OverlapBox(child.position,
                                                      (child.lossyScale / 2) + overlapTolerance,
-                                                     child.rotation,
-                                                     mask);
+                                                     child.rotation);
             if (overlaps.Length > 0)
                 return true;
         }
