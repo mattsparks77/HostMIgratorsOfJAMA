@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class HeightChecker : MonoBehaviour {
+public class HeightChecker : NetworkBehaviour {
 
     [SerializeField] float velocityThreshold = Vector3.kEpsilon;
 
-    float bestHeight = 0f;
+    [SyncVar] float bestHeight = 0f;
     float currentHeight = 0f;
 	
 	// Update is called once per frame
@@ -21,7 +22,8 @@ public class HeightChecker : MonoBehaviour {
             }
         }
         currentHeight = height;
-        bestHeight = Mathf.Max(bestHeight, currentHeight);
+        if(isServer)
+            bestHeight = Mathf.Max(bestHeight, currentHeight);
 	}
 
     float CheckHeight(Rigidbody body) {
