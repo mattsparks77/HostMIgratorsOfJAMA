@@ -43,7 +43,7 @@ public class BlockSpawner : NetworkBehaviour {
             RotateObject(direction);
             moveHighlightToObject();
             toDrop.transform.position = this.gameObject.transform.position;
-            if (Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyDown(KeyCode.Space) || timeCounter <= -3f) {
                 if (isLocalPlayer) {
                     // Let the block drop and disable the highlight
                     toDrop.GetComponent<Rigidbody>().useGravity = true;
@@ -118,12 +118,12 @@ public class BlockSpawner : NetworkBehaviour {
         Quaternion oldRotation = toDrop.transform.rotation;
         //toDrop.GetComponent<Rigidbody>().MoveRotation(newRotation); //transform.rotation = newRotation;
         toDrop.transform.rotation = newRotation;
-        if (objectHasOverlaps())
-        {
-            print("Has overlaps");
-            toDrop.transform.rotation = oldRotation;
-            updateCurrentRotation(-direction);
-        }
+        //if (objectHasOverlaps())
+        //{
+        //    print("Has overlaps");
+        //    toDrop.transform.rotation = oldRotation;
+        //    updateCurrentRotation(-direction);
+        //}
         updateHighlightScaleAndOffset();
         setColliders(true); //Reset colliders at the end
     }

@@ -87,13 +87,15 @@ MonoBehaviour:
   block_list:
   - {fileID: 1521009058254410, guid: e54b2c949b5fa8f49a8a4b1e56310160, type: 2}
   - {fileID: 1319242225747828, guid: 8c5cd2d362d570f41890f158f854cf64, type: 2}
-  - {fileID: 1807214016536514, guid: a2f79980f85a70b438ae25571eebf704, type: 2}
   - {fileID: 1289568843803016, guid: d063da2fdff6c0c4f9aa8796e839f9ef, type: 2}
-  - {fileID: 1846421860638862, guid: 4a31b5b46d5259448bd94f99cda6f775, type: 2}
+  - {fileID: 1807214016536514, guid: a2f79980f85a70b438ae25571eebf704, type: 2}
   - {fileID: 1147353553311874, guid: 92dc2319ab7ea2343ab356a770e1f7e3, type: 2}
   - {fileID: 1108794145363182, guid: 43519760e506468418eece699de4b83b, type: 2}
+  - {fileID: 1108794145363182, guid: 43519760e506468418eece699de4b83b, type: 2}
   movementSpeed: 5
-  selectedObject: {fileID: 1209009445988740, guid: 40c322c1eafc044a39477632bdc992fb,
+  selectedObject: {fileID: 1521009058254410, guid: e54b2c949b5fa8f49a8a4b1e56310160,
     type: 2}
+  toDrop: {fileID: 0}
+  is_instantiated: 0
   areaHighlightPrefab: {fileID: 1369941248916658, guid: 112b05183c2433e4381fb7ea095056fd,
     type: 2}
