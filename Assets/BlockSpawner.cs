@@ -27,13 +27,18 @@ public class BlockSpawner : NetworkBehaviour {
         direction += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
 
         timeCounter -= Time.deltaTime;
-        if (!is_instantiated && timeCounter <= 0)
+        if (!is_instantiated && timeCounter <= 0 &&isLocalPlayer)
         {
             int rand = Random.Range(0, 6);
             selectedObject = block_list[rand];
 
             //Choose block to spawn and re-enable highlight 
             toDrop = Instantiate(selectedObject, this.gameObject.transform.position, Quaternion.identity, this.gameObject.transform);
+            //disables box colliders in indicator
+            foreach (BoxCollider child in toDrop.GetComponentsInChildren<BoxCollider>())
+            {
+                child.enabled = false;
+            }
             //Cmdtry_block_spawn();
             updateHighlightScaleAndOffset();
             areaHighlight.SetActive(true);
@@ -50,7 +55,7 @@ public class BlockSpawner : NetworkBehaviour {
                     // Let the block drop and disable the highlight
                     Destroy(toDrop);
                     Cmdtry_block_spawn();
-                    toDrop.GetComponent<Rigidbody>().useGravity = true;
+                    
                     is_instantiated = false;
                   
                     areaHighlight.SetActive(false);
@@ -62,16 +67,17 @@ public class BlockSpawner : NetworkBehaviour {
         }
         
     }
-    //[Command]
-    //void Cmd_change_gravity()
-    //{
+    [Command]
+    void Cmd_change_gravity()
+    {
 
-    //}
+    }
 	[Command]
 	void Cmdtry_block_spawn(){
 	 {
             //GameObject a_block = Instantiate (selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
             toDrop = Instantiate(selectedObject, this.gameObject.transform.position, Quaternion.identity, this.gameObject.transform);
+            toDrop.GetComponent<Rigidbody>().useGravity = true;
             NetworkServer.Spawn (toDrop);
 		}
 
