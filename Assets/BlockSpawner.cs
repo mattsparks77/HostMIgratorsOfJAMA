@@ -31,9 +31,10 @@ public class BlockSpawner : NetworkBehaviour {
         {
             int rand = Random.Range(0, 6);
             selectedObject = block_list[rand];
-            
+
             //Choose block to spawn and re-enable highlight 
             toDrop = Instantiate(selectedObject, this.gameObject.transform.position, Quaternion.identity, this.gameObject.transform);
+            //Cmdtry_block_spawn();
             updateHighlightScaleAndOffset();
             areaHighlight.SetActive(true);
             resetCurrentRotation();
@@ -47,25 +48,31 @@ public class BlockSpawner : NetworkBehaviour {
             if (Input.GetKeyDown(KeyCode.Space) || timeCounter <= -3f) {//change value here to determine the amount of time it takes to auto drop block subtracting from 1.5f so at -3f it auto spawns in 4.5 seconds etc.
                 if (isLocalPlayer) {
                     // Let the block drop and disable the highlight
-                    toDrop.GetComponent<Rigidbody>().useGravity = true;
+                    Destroy(toDrop);
                     Cmdtry_block_spawn();
+                    toDrop.GetComponent<Rigidbody>().useGravity = true;
                     is_instantiated = false;
-                    toDrop = null;
+                  
                     areaHighlight.SetActive(false);
                     timeCounter = timeTilNextBlock;
+                    toDrop = null;
                     //next_selected_object();
                 }
             }
         }
         
     }
+    //[Command]
+    //void Cmd_change_gravity()
+    //{
+
+    //}
 	[Command]
 	void Cmdtry_block_spawn(){
 	 {
             //GameObject a_block = Instantiate (selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
-            
-			NetworkServer.Spawn (toDrop);
-           
+            toDrop = Instantiate(selectedObject, this.gameObject.transform.position, Quaternion.identity, this.gameObject.transform);
+            NetworkServer.Spawn (toDrop);
 		}
 
 	}
