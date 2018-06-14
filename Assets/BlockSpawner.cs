@@ -43,7 +43,8 @@ public class BlockSpawner : NetworkBehaviour {
             RotateObject(direction);
             moveHighlightToObject();
             toDrop.transform.position = this.gameObject.transform.position;
-            if (Input.GetKeyDown(KeyCode.Space) || timeCounter <= -3f) {
+
+            if (Input.GetKeyDown(KeyCode.Space) || timeCounter <= -3f) {//change value here to determine the amount of time it takes to auto drop block subtracting from 1.5f so at -3f it auto spawns in 4.5 seconds etc.
                 if (isLocalPlayer) {
                     // Let the block drop and disable the highlight
                     toDrop.GetComponent<Rigidbody>().useGravity = true;
