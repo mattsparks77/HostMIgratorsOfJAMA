@@ -20,9 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4781952681813858}
   - component: {fileID: 114515431367346804}
-  - component: {fileID: 143753789403805918}
   - component: {fileID: 114513140610935076}
-  - component: {fileID: 114823754329083818}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -99,35 +97,3 @@ MonoBehaviour:
     type: 2}
   areaHighlightPrefab: {fileID: 1369941248916658, guid: 112b05183c2433e4381fb7ea095056fd,
     type: 2}
---- !u!114 &114823754329083818
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1392479463493202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb59bf586577eb04ca5f6dcc38fa94d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedObject: {fileID: 1521009058254410, guid: e54b2c949b5fa8f49a8a4b1e56310160,
-    type: 2}
-  areaHighlightPrefab: {fileID: 1369941248916658, guid: 112b05183c2433e4381fb7ea095056fd,
-    type: 2}
---- !u!143 &143753789403805918
-CharacterController:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1392479463493202}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
