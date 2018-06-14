@@ -17,7 +17,7 @@ public class BlockSpawner : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-
+        selectedObject.transform.position = this.gameObject.transform.position;
         int direction = 0;
         //Get the direction based on what button they're pressing
         direction += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;
@@ -34,13 +34,17 @@ public class BlockSpawner : NetworkBehaviour {
 	[Command]
 	void Cmdtry_block_spawn(){
 	 {
-			GameObject a_block = Instantiate (selectedObject, this.gameObject.transform);
+			GameObject a_block = Instantiate (selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
 			NetworkServer.Spawn (a_block);
             next_selected_object();
 		}
 
 	}
-    
+    public void SetNewSelectedObjectRef(GameObject newReferencedObject)
+    {
+        selectedObject = newReferencedObject;
+        updateHighlightScaleAndOffset();
+    }
     public GameObject return_selected()
     {
         return selectedObject;
@@ -48,15 +52,22 @@ public class BlockSpawner : NetworkBehaviour {
     public void next_selected_object()
     {
         int rand = Random.Range(0, 6);
-        selectedObject = block_list[rand];
+        SetNewSelectedObjectRef(block_list[rand]);
+        show_selected_object();
+    }
+    public void show_selected_object()
+    {
+        Instantiate(selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
     }
 
     // Use this for initialization
     void Start()
     {
         //TODO, need an initializer for new objects as the player chooses them
+        
         areaHighlight = Instantiate(areaHighlightPrefab);
-        updateHighlightScaleAndOffset();
+        next_selected_object();
+        //updateHighlightScaleAndOffset();
     }
 
     // Update is called once per frame
