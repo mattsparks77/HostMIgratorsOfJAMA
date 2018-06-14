@@ -11,9 +11,11 @@ public class BlockSpawnerTwo : NetworkBehaviour {
     [SerializeField] KeyCode rotateKey = KeyCode.E;
     [SerializeField] KeyCode spawnKey = KeyCode.Space;
     [SerializeField] float cooldownTime = 1.5f;
+    [SerializeField] HighlightBehaviour areaHighlightPrefab;
 
     //instance variables
     GameObject indicator;
+    HighlightBehaviour areaHighlight;
     int blockIndex = 0;
     int rotation = 0;
     float spawnCooldown = 0;
@@ -27,6 +29,7 @@ public class BlockSpawnerTwo : NetworkBehaviour {
         if (!isLocalPlayer)
             return;
         CreateIndicator();
+        CreateHighlight();
     }
     
     // Update is called once per frame
@@ -56,6 +59,18 @@ public class BlockSpawnerTwo : NetworkBehaviour {
         rotation %= 360;
     }
 
+    //================================================================================
+    // Highlight functions
+    //================================================================================
+    void CreateHighlight() {
+        areaHighlight = Instantiate(areaHighlightPrefab.gameObject).GetComponent<HighlightBehaviour>();
+        areaHighlight.AdjustHighlightScaleAndOffsetFor(indicator);
+    }
+
+    //Call this whenever the indicator goes "missing" and set it to false, then back to true when it appears
+    void SetHighlightActive(bool active) {
+        areaHighlight.gameObject.SetActive(active);
+    }
 
     //================================================================================
     // Indicator functions
@@ -68,6 +83,9 @@ public class BlockSpawnerTwo : NetworkBehaviour {
             return;
         Vector3 newPosition = new Vector3((int)cameraPosition.x, (int)cameraPosition.y, GameConstants.playPlaneZ);
         indicator.transform.position = newPosition;
+
+        //Adjust highlight position after indicator moves
+        areaHighlight.MoveHighlightTo(indicator);
     }
 
     //sets the indicator's rotation
@@ -75,6 +93,9 @@ public class BlockSpawnerTwo : NetworkBehaviour {
         if (indicator == null)
             return;
         indicator.transform.rotation = Quaternion.AngleAxis(angle, transform.forward);
+
+        //Adjust highlight scale after indicator changes rotation
+        areaHighlight.AdjustHighlightScaleAndOffsetFor(indicator);
     }
 
     //instantiates an indicator using the prefab for the block it is supposed to represent,
@@ -93,6 +114,7 @@ public class BlockSpawnerTwo : NetworkBehaviour {
             if (child != null)
                 Destroy(child);
         }
+        
     }
 
     //destroys the current indicator
