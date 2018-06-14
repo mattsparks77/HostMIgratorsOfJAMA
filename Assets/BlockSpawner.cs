@@ -53,7 +53,7 @@ public class BlockSpawner : NetworkBehaviour {
     {
         int rand = Random.Range(0, 6);
         SetNewSelectedObjectRef(block_list[rand]);
-        show_selected_object();
+        //show_selected_object();
     }
     public void show_selected_object()
     {
@@ -67,7 +67,7 @@ public class BlockSpawner : NetworkBehaviour {
         
         areaHighlight = Instantiate(areaHighlightPrefab);
         next_selected_object();
-        //updateHighlightScaleAndOffset();
+        updateHighlightScaleAndOffset();
     }
 
     // Update is called once per frame
