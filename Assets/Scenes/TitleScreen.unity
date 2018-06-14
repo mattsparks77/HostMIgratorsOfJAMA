@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afd8f3ff2716eb14d8b34f1518aedc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Matt's Scene
+  sceneName: Auto Migration
 --- !u!1 &998454871
 GameObject:
   m_ObjectHideFlags: 0
