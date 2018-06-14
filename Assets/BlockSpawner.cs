@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 public class BlockSpawner : NetworkBehaviour {
-    public GameObject[] block_list;
+    public static GameObject[] block_list;
 	public float movementSpeed = 5f;
     public GameObject selectedObject;
-
+    public GameObject object_to_drop;
     [SerializeField] private GameObject areaHighlightPrefab;
     private GameObject areaHighlight;
     private Vector2 highlightOffset = Vector3.zero; //Used to adjust where the highlight would go due to rotation
@@ -17,7 +17,7 @@ public class BlockSpawner : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-        selectedObject.transform.position = this.gameObject.transform.position;
+        
         int direction = 0;
         //Get the direction based on what button they're pressing
         direction += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;
@@ -30,7 +30,8 @@ public class BlockSpawner : NetworkBehaviour {
 			if (isLocalPlayer)
 				Cmdtry_block_spawn ();
 		}
-	}
+        object_to_drop.transform.position = this.gameObject.transform.position;
+    }
 	[Command]
 	void Cmdtry_block_spawn(){
 	 {
@@ -43,6 +44,7 @@ public class BlockSpawner : NetworkBehaviour {
     public void SetNewSelectedObjectRef(GameObject newReferencedObject)
     {
         selectedObject = newReferencedObject;
+        object_to_drop = selectedObject;
         updateHighlightScaleAndOffset();
     }
     public GameObject return_selected()
@@ -57,16 +59,18 @@ public class BlockSpawner : NetworkBehaviour {
     }
     public void show_selected_object()
     {
-        Instantiate(selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
+        next_selected_object();
+        object_to_drop = Instantiate(selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
+        object_to_drop.GetComponent<Rigidbody>().useGravity = false;
     }
 
     // Use this for initialization
     void Start()
     {
         //TODO, need an initializer for new objects as the player chooses them
-        
+        show_selected_object();
         areaHighlight = Instantiate(areaHighlightPrefab);
-        next_selected_object();
+      
         updateHighlightScaleAndOffset();
     }
 
@@ -80,13 +84,13 @@ public class BlockSpawner : NetworkBehaviour {
         updateCurrentRotation(direction);
         //Assign a new z-rotation quaternion
         Quaternion newRotation = Quaternion.Euler(0, 0, rotationAngles[currentRotation]);
-        Quaternion oldRotation = selectedObject.transform.rotation;
+        Quaternion oldRotation = object_to_drop.transform.rotation;
         //selectedObject.GetComponent<Rigidbody>().MoveRotation(newRotation); //transform.rotation = newRotation;
-        selectedObject.transform.rotation = newRotation;
+        object_to_drop.transform.rotation = newRotation;
         if (objectHasOverlaps())
         {
             print("Has overlaps");
-            selectedObject.transform.rotation = oldRotation;
+            object_to_drop.transform.rotation = oldRotation;
             updateCurrentRotation(-direction);
         }
         updateHighlightScaleAndOffset();
@@ -110,7 +114,7 @@ public class BlockSpawner : NetworkBehaviour {
     private bool objectHasOverlaps()
     {
         Vector3 sizeOffset = Vector3.one * 0.05f; //Small number so boundary cases would still work
-        foreach (Transform child in selectedObject.transform)
+        foreach (Transform child in object_to_drop.transform)
         {
             Collider[] overlaps = Physics.OverlapBox(child.position, child.lossyScale / 2.0f - sizeOffset, Quaternion.identity);
             if (overlaps.Length > 0)
@@ -121,7 +125,7 @@ public class BlockSpawner : NetworkBehaviour {
 
     private void moveHighlightToObject()
     {
-        Vector3 objectPos = selectedObject.transform.position;
+        Vector3 objectPos = object_to_drop.transform.position;
         Vector3 yOffset = Vector3.up * areaHighlight.transform.localScale.y / 2;
         //if (areaHighlight.transform.localScale.x % 2 == 0) {
         objectPos.x += highlightOffset.x;
@@ -133,7 +137,7 @@ public class BlockSpawner : NetworkBehaviour {
     private void updateHighlightScaleAndOffset()
     {
         float lowestX = int.MaxValue, highestX = int.MinValue;
-        foreach (Transform child in selectedObject.transform)
+        foreach (Transform child in object_to_drop.transform)
         {
             lowestX = Mathf.Min(lowestX, child.position.x);
             highestX = Mathf.Max(highestX, child.position.x);
@@ -143,7 +147,7 @@ public class BlockSpawner : NetworkBehaviour {
         Vector3 newScale = areaHighlight.transform.localScale;
         newScale.x = newScaleX;
         areaHighlight.transform.localScale = newScale;
-        highlightOffset.x = (highestX + lowestX) / 2 - selectedObject.transform.position.x;
+        highlightOffset.x = (highestX + lowestX) / 2 - object_to_drop.transform.position.x;
         print("Highest X: " + highestX + " | Lowest X: " + lowestX + "Offset: " + highlightOffset.x);
         updateYOffset(newScaleX);
     }
@@ -153,16 +157,16 @@ public class BlockSpawner : NetworkBehaviour {
     {
         float highestYPos = int.MinValue;
         float lowestYPos = int.MaxValue;
-        foreach (Transform child in selectedObject.transform)
+        foreach (Transform child in object_to_drop.transform)
         {
             highestYPos = Mathf.Max(child.position.y, highestYPos);
             lowestYPos = Mathf.Min(child.position.y, lowestYPos);
         }
-        int[] filledAmount = new int[Mathf.RoundToInt((highestYPos - lowestYPos) / selectedObject.transform.localScale.y) + 1];
-        foreach (Transform child in selectedObject.transform)
+        int[] filledAmount = new int[Mathf.RoundToInt((highestYPos - lowestYPos) / object_to_drop.transform.localScale.y) + 1];
+        foreach (Transform child in object_to_drop.transform)
         {
             //Get the index of how far child is away from the top child
-            int currYIndex = Mathf.RoundToInt((highestYPos - child.position.y) / selectedObject.transform.localScale.y);
+            int currYIndex = Mathf.RoundToInt((highestYPos - child.position.y) / object_to_drop.transform.localScale.y);
             filledAmount[currYIndex]++;
         }
         int highestIndexY = 0;
@@ -174,8 +178,8 @@ public class BlockSpawner : NetworkBehaviour {
             }
         }
         print(highestIndexY);
-        float highDifference = highestYPos - selectedObject.transform.position.y;
-        highlightOffset.y = highDifference - highestIndexY * selectedObject.transform.localScale.y;
+        float highDifference = highestYPos - object_to_drop.transform.position.y;
+        highlightOffset.y = highDifference - highestIndexY * object_to_drop.transform.localScale.y;
     }
 
     private void setColliders(bool active)
