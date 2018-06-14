@@ -7,43 +7,55 @@ public class BlockSpawner : NetworkBehaviour {
 	public float movementSpeed = 5f;
     public GameObject selectedObject;
     public GameObject toDrop;
-    public bool is_instantiated = false;
+    private bool is_instantiated = false;
     [SerializeField] private GameObject areaHighlightPrefab;
     private GameObject areaHighlight;
     private Vector2 highlightOffset = Vector3.zero; //Used to adjust where the highlight would go due to rotation
 
     private int[] rotationAngles = { 0, 90, 180, 270 };
     private int currentRotation = 0;
+
+    [SerializeField] private float timeTilNextBlock = 1.5f;
+    private float timeCounter = 0;
     // Use this for initialization
 
     // Update is called once per frame
     void Update () {
-        
         int direction = 0;
         //Get the direction based on what button they're pressing
         direction += Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0;
         direction += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
-        if (!is_instantiated)
+
+        timeCounter -= Time.deltaTime;
+        if (!is_instantiated && timeCounter <= 0)
         {
             int rand = Random.Range(0, 6);
             selectedObject = block_list[rand];
             
-            toDrop = Instantiate(selectedObject, this.gameObject.transform);
+            //Choose block to spawn and re-enable highlight 
+            toDrop = Instantiate(selectedObject, this.gameObject.transform.position, Quaternion.identity, this.gameObject.transform);
             updateHighlightScaleAndOffset();
+            areaHighlight.SetActive(true);
+            resetCurrentRotation();
             is_instantiated = true;
         }
-        RotateObject(direction);
-        moveHighlightToObject();
-       toDrop.transform.position = this.gameObject.transform.position;
-        if (Input.GetKeyDown (KeyCode.Space)) {
-            if (isLocalPlayer)
-            {
-                toDrop.GetComponent<Rigidbody>().useGravity = true;
-                Cmdtry_block_spawn();
-                is_instantiated = false;
-                //next_selected_object();
+        if (toDrop) {
+            RotateObject(direction);
+            moveHighlightToObject();
+            toDrop.transform.position = this.gameObject.transform.position;
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                if (isLocalPlayer) {
+                    // Let the block drop and disable the highlight
+                    toDrop.GetComponent<Rigidbody>().useGravity = true;
+                    Cmdtry_block_spawn();
+                    is_instantiated = false;
+                    toDrop = null;
+                    areaHighlight.SetActive(false);
+                    timeCounter = timeTilNextBlock;
+                    //next_selected_object();
+                }
             }
-		}
+        }
         
     }
 	[Command]
@@ -87,7 +99,7 @@ public class BlockSpawner : NetworkBehaviour {
         //TODO, need an initializer for new objects as the player chooses them
         //show_selected_object();
         areaHighlight = Instantiate(areaHighlightPrefab);
-
+        areaHighlight.SetActive(false);
         //next_selected_object();
 
         
@@ -128,6 +140,10 @@ public class BlockSpawner : NetworkBehaviour {
         {
             currentRotation = rotationAngles.Length - 1;
         }
+    }
+
+    private void resetCurrentRotation() {
+        currentRotation = 0;
     }
 
     private bool objectHasOverlaps()
