@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 public class BlockSpawner : NetworkBehaviour {
-    public static GameObject[] block_list;
+    public GameObject[] block_list;
 	public float movementSpeed = 5f;
     public GameObject selectedObject;
     public GameObject toDrop;
@@ -25,12 +25,15 @@ public class BlockSpawner : NetworkBehaviour {
         direction += Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0;
         if (!is_instantiated)
         {
-            toDrop = Instantiate(selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
+            int rand = Random.Range(0, 6);
+            selectedObject = block_list[rand];
+            updateHighlightScaleAndOffset();
+            toDrop = Instantiate(selectedObject, this.gameObject.transform);
             is_instantiated = true;
         }
         RotateObject(direction);
         moveHighlightToObject();
-   
+       // selectedObject.transform.position = this.gameObject.transform.position;
         if (Input.GetKeyDown (KeyCode.Space)) {
             if (isLocalPlayer)
             {
@@ -39,7 +42,7 @@ public class BlockSpawner : NetworkBehaviour {
                 next_selected_object();
             }
 		}
-        selectedObject.transform.position = this.gameObject.transform.position;
+        
     }
 	[Command]
 	void Cmdtry_block_spawn(){
@@ -53,7 +56,7 @@ public class BlockSpawner : NetworkBehaviour {
 	}
     public void SetNewSelectedObjectRef(GameObject newReferencedObject)
     {
-        selectedObject = newReferencedObject;
+        //selectedObject = newReferencedObject;
         //selectedObject = selectedObject;
         updateHighlightScaleAndOffset();
     }
@@ -64,13 +67,15 @@ public class BlockSpawner : NetworkBehaviour {
     public void next_selected_object()
     {
         int rand = Random.Range(0, 6);
-        SetNewSelectedObjectRef(block_list[rand]);
-        //show_selected_object();
+        selectedObject = Instantiate(block_list[rand], this.gameObject.transform.position, selectedObject.transform.rotation);
+        updateHighlightScaleAndOffset();
+        //SetNewSelectedObjectRef(sele);
+     
     }
-    public void show_selected_object()
+    public void instantiate_selected_object(GameObject toIns)
     {
 
-        selectedObject = Instantiate(selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
+        selectedObject = Instantiate(toIns, this.gameObject.transform.position, selectedObject.transform.rotation);
         selectedObject.GetComponent<Rigidbody>().useGravity = false;
     }
 
@@ -78,9 +83,11 @@ public class BlockSpawner : NetworkBehaviour {
     void Start()
     {
         //TODO, need an initializer for new objects as the player chooses them
-        next_selected_object();
+        //show_selected_object();
         areaHighlight = Instantiate(areaHighlightPrefab);
-      
+
+        //next_selected_object();
+
         updateHighlightScaleAndOffset();
     }
 
