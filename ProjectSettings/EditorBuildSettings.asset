@@ -8,7 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test Scene.unity
     guid: d2b89a0eb322c435496d1960a3b1c309
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Matt's Scene.unity
     guid: 5dca4408c89364ad4aa758b82e0102f7
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 533ee00a75cde9e448419dcedc79421b
+  - enabled: 1
+    path: Assets/Scenes/ProfileScene.unity
+    guid: 10b2980001ee6e84abb107c91629b92e
+  - enabled: 1
+    path: Assets/Scenes/InfoScene.unity
+    guid: 768793c9103816e498c4536fb2024813
