@@ -145,7 +145,8 @@ public class BlockSpawnerTwo : NetworkBehaviour {
         foreach (Transform child in indicator.transform.GetComponentsInChildren<Transform>()) {
             Collider[] overlaps = Physics.OverlapBox(child.position,
                                                      (child.lossyScale / 2) + overlapTolerance,
-                                                     child.rotation);
+                                                     child.rotation,
+                                                     mask);
             if (overlaps.Length > 0)
                 return true;
         }

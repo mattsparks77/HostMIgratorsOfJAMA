@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33366570950666358}
   - component: {fileID: 65133169648240298}
   - component: {fileID: 23817887342530316}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SingleCube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33897073640060678}
   - component: {fileID: 65559348810901950}
   - component: {fileID: 23412224099268744}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SingleCube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 33431527606145882}
   - component: {fileID: 65770880796932582}
   - component: {fileID: 23872060500316384}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SingleCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 33449603548484544}
   - component: {fileID: 65155929691822974}
   - component: {fileID: 23610862069663554}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SingleCube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 54621683120980764}
   - component: {fileID: 65071951181451222}
   - component: {fileID: 114485398461865464}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TetrixL
   m_TagString: Untagged
   m_Icon: {fileID: 0}

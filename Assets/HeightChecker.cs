@@ -6,12 +6,18 @@ using UnityEngine.Networking;
 public class HeightChecker : NetworkBehaviour {
 
     [SerializeField] float velocityThreshold = Vector3.kEpsilon;
+    [SerializeField] float checkInterval = 1.5f;
 
     [SyncVar] float bestHeight = 0f;
     float currentHeight = 0f;
+    float timer = 0f;
 	
 	// Update is called once per frame
 	void Update () {
+        timer += Time.deltaTime;
+        if (timer < checkInterval)
+            return;
+        timer = 0f;
         Rigidbody[] bodies = FindObjectsOfType<Rigidbody>();
         float height = 0f;
         foreach (Rigidbody body in bodies) {
