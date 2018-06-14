@@ -33,13 +33,14 @@ public class BlockSpawner : NetworkBehaviour {
         }
         RotateObject(direction);
         moveHighlightToObject();
-       // selectedObject.transform.position = this.gameObject.transform.position;
+       toDrop.transform.position = this.gameObject.transform.position;
         if (Input.GetKeyDown (KeyCode.Space)) {
             if (isLocalPlayer)
             {
+                toDrop.GetComponent<Rigidbody>().useGravity = true;
                 Cmdtry_block_spawn();
                 is_instantiated = false;
-                next_selected_object();
+                //next_selected_object();
             }
 		}
         
@@ -48,7 +49,7 @@ public class BlockSpawner : NetworkBehaviour {
 	void Cmdtry_block_spawn(){
 	 {
             //GameObject a_block = Instantiate (selectedObject, this.gameObject.transform.position, selectedObject.transform.rotation);
-            toDrop.GetComponent<Rigidbody>().useGravity = true;
+            
 			NetworkServer.Spawn (toDrop);
            
 		}
